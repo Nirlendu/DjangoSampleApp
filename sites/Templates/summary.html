@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container">
+			{% if x == "sum" %}
+				<h2>Summary</h2>
+			{% endif %}
+			{% if x == "average" %}
+				<h2>Summary - Average</h2>
+			{% endif %}
+			<a href="/summary/"><button type="button" class="btn btn-primary active">Sum</button></a>
+          	<a href="/summary-average/"><button type="button" class="btn btn-primary">Average</button></a>
+			<table class="table table-striped"> 
+				<thead>
+					<tr>
+						<th>Site</th>
+						<th>A Value</th>
+						<th>B Value</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for entry in list_ob %}
+						<tr>
+							{% for elements in entry %}
+							<td>{{elements}}</td>
+							{% endfor %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
