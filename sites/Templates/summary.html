@@ -2,13 +2,13 @@
 	{% include "navigation.html" %}
 	<body>
 		<div class="container">
-			{% if x == "sum" %}
+			{% if page == "summary" %}
 				<h2>Summary</h2>
 			{% endif %}
-			{% if x == "average" %}
+			{% if page == "summary_average" %}
 				<h2>Summary - Average</h2>
 			{% endif %}
-			<a href="/summary/"><button type="button" class="btn btn-primary active">Sum</button></a>
+			<a href="/summary/"><button type="button" class="btn btn-primary">Sum</button></a>
           	<a href="/summary-average/"><button type="button" class="btn btn-primary">Average</button></a>
 			<table class="table table-striped"> 
 				<thead>
@@ -19,7 +19,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for entry in list_ob %}
+					{% for entry in entries %}
 						<tr>
 							{% for elements in entry %}
 							<td>{{elements}}</td>

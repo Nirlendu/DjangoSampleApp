@@ -1,48 +1,54 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from sites.models import Data
+from django.db import connection
+from enum_data import Sites, Pages
 
 def index(request):
-    return render(request, "index.html", {})
+	return render(request, Pages.index, {})
 
-def one(request):
-    x = Data.objects.filter(site_name="demo_site").order_by("entry_date")
-    return render(request, "sites.html", {"list_ob" : x, "site":"demo"})
+def demo_site(request):
+	x = Data.objects.filter(site_name = Sites.demo).order_by("entry_date")
+	return render(request, Pages.sites, {"entries" : x, "site" : Sites.demo})
 
-def two(request):
-    x = Data.objects.filter(site_name="abc_site").order_by("entry_date")
-    return render(request, "sites.html", {"list_ob" : x, "site":"abc"})
+def abc_site(request):
+	x = Data.objects.filter(site_name = Sites.abc).order_by("entry_date")
+	return render(request, Pages.sites, {"entries" : x, "site" : Sites.abc})
 
-def three(request):
-    x = Data.objects.filter(site_name="xyz_site").order_by("entry_date")
-    return render(request, "sites.html", {"list_ob" : x, "site":"xyz"})
+def xyz_site(request):
+	x = Data.objects.filter(site_name = Sites.xyz).order_by("entry_date")
+	return render(request, Pages.sites, {"entries" : x, "site" : Sites.xyz})
 
 def sum_entries(site):
-    res = []
-    x = Data.objects.filter(site_name=site)
-    res.append(site.replace("_", " ").upper())
-    res.append("{0:.2f}".format(sum(entry.a_value for entry in x)))
-    res.append("{0:.2f}".format(sum(entry.b_value for entry in x)))
-    return res
+	res = []
+	res.append(site.replace("_", " ").upper())
+	cursor = connection.cursor()
+	cursor.execute("SELECT SUM(a_value) from sites_data where site_name = '" + site + "'")
+	for p in cursor.fetchone():
+		res.append(p)
+	cursor.execute("SELECT SUM(b_value) from sites_data where site_name = '" + site + "'")
+	for p in cursor.fetchone():
+		res.append(p)
+	return res
 
 def average_entries(site):
-    res = []
-    x = Data.objects.filter(site_name=site)
-    res.append(site.replace("_", " ").upper())
-    res.append("{0:.2f}".format(sum(entry.a_value for entry in x)/len(x)))
-    res.append("{0:.2f}".format(sum(entry.b_value for entry in x)/len(x)))
-    return res
+	res = []
+	x = Data.objects.filter(site_name = site)
+	res.append(site.replace("_", " ").upper())
+	res.append("{0:.2f}".format(sum(entry.a_value for entry in x)/len(x)))
+	res.append("{0:.2f}".format(sum(entry.b_value for entry in x)/len(x)))
+	return res
 
 def summary(request):
-    res = []
-    res.append(sum_entries("demo_site"))
-    res.append(sum_entries("abc_site"))
-    res.append(sum_entries("xyz_site"))
-    return render(request, "summary.html", {"list_ob" : res, "x" : "sum"})
+	res = []
+	res.append(sum_entries(Sites.demo))
+	res.append(sum_entries(Sites.abc))
+	res.append(sum_entries(Sites.xyz))
+	return render(request, Pages.summary, {"entries" : res, "page" : Sites.summary})
 
 def summary_average(request):
-    res = []
-    res.append(average_entries("demo_site"))
-    res.append(average_entries("abc_site"))
-    res.append(average_entries("xyz_site"))
-    return render(request, "summary.html", {"list_ob" : res, "x" : "average"})
+	res = []
+	res.append(average_entries(Sites.demo))
+	res.append(average_entries(Sites.abc))
+	res.append(average_entries(Sites.xyz))
+	return render(request, Pages.summary, {"entries" : res, "page" : Sites.summary_average})

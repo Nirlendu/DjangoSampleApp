@@ -2,13 +2,13 @@
 	{% include "navigation.html" %}
 	<body>
 		<div class="container">
-			{% if site == "demo" %}
+			{% if site == "demo_site" %}
 				<h2>Site Details - Demo Site</h2>
 			{% endif %}
-			{% if site == "abc" %}
+			{% if site == "abc_site" %}
 				<h2>Site Details - ABC Site</h2>
 			{% endif %}
-			{% if site == "xyz" %}
+			{% if site == "xyz_site" %}
 				<h2>Site Details - XYZ Site</h2>
 			{% endif %}
 			<table class="table table-striped"> 
@@ -20,7 +20,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for entry in list_ob %}
+					{% for entry in entries %}
 						<tr>
 							<td>{{entry.entry_date}}</td>
 							<td>{{entry.a_value}}</td>
