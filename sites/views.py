@@ -2,6 +2,9 @@
 from django.shortcuts import render
 from sites.models import Data
 
+def index(request):
+    return render(request, "index.html", {})
+
 def one(request):
     x = Data.objects.filter(site_name="demo_site").order_by("entry_date")
     return render(request, "sites.html", {"list_ob" : x, "site":"demo"})
